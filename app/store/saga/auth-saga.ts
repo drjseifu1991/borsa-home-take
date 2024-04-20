@@ -22,13 +22,13 @@ let axiosRequest = async ({url, method, data}: axiosProps) => {
 export function* loginUser(loginRequest: PayloadAction<LoginRequest>): Generator<any, void, any> {
   try {
     yield put(setLoading(true))
-
-    let result = yield call(() => axiosRequest({ url: "http://143.198.168.244:3000/api/users/login", method: 'post', data: loginRequest }));
+    
+    let result = yield call(() => axiosRequest({ url: "http://143.198.168.244:3000/api/users/login", method: 'post', data: loginRequest.payload}));
 
     yield put(setSession(result.data));
 
   } catch (e) {
-    yield put({ type: sagaActions.LOGIN_FAILURE });
+
   }
   finally {
     yield put(setLoading(false))
@@ -40,7 +40,7 @@ export function* registerUser(userInfo: PayloadAction<UserInfo>): Generator<any,
     yield put(setLoading(true))
 
     let result = yield call(() => axiosRequest({ url: "http://143.198.168.244:3000/api/users/register/v2", method: 'post', data: userInfo.payload }));
-
+    console.log(result)
     yield put(setSession(result.data));
   } catch (e) {
 

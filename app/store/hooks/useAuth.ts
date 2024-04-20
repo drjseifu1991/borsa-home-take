@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "./app-store-hook";
 import { Session, LoginRequest } from "../../model";
 import { logIn, logOut, selectIsLoading, selectSession } from "../slice";
+import { sagaActions } from "../saga/saga-actions";
 
 export const useAuth = (): {
   session: Session;
@@ -16,7 +17,7 @@ export const useAuth = (): {
   return {
     session,
     submitLoginRequest: (request: LoginRequest) => {
-      
+      dispatch({ type: sagaActions.LOGIN_SUCCESS, payload: {...request}})
     },
     logOut: () => {
       dispatch(logOut());

@@ -1,12 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
+import { Provider } from 'react-redux';
 import { StyleSheet, Text, View } from 'react-native';
+import LoginScreenOne from './app/feature/Login/Login';
+import { store } from './app/store/app-store';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <LoginScreenOne/>
+    </Provider>
   );
 }
 
