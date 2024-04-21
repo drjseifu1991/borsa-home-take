@@ -2,9 +2,14 @@ import React, { useState} from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View,Image } from 'react-native';
 import { Button } from '@rneui/base';
 import { useAuth } from '../../store/hooks/useAuth';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+type Props = {
+    navigation: StackNavigationProp<any, 'Login'>; // Define the navigation prop type
+};
 
 
-const LoginPage = () => {
+const LoginPage: React.FC<Props> = ({navigation}) => {
     const { submitLoginRequest, selectIsLoading } = useAuth()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -78,7 +83,7 @@ const LoginPage = () => {
             </View>
             
             <View style={{bottom:'-2%'}}>
-                <Text style={{textAlign:'center'}}>Not a member?{" "}<Text style={{color:'#1580FF'}}>Register here</Text> </Text>
+                <Text style={{textAlign:'center'}}>Not a member?{" "}<Text onPress={() => navigation.navigate('Register')} style={{color:'#1580FF'}}>Register here</Text> </Text>
             </View>
         </View>
     )

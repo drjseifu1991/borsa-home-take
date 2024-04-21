@@ -1,5 +1,5 @@
 export type UserInfo = {
-    id: string,
+    _id: string,
     firstName: string,
     lastName: string,
     email: string,
@@ -8,3 +8,10 @@ export type UserInfo = {
     profilePic?: string,
     isBuyer: boolean
 }
+
+
+// Create a UserRegistrationModel by omitting 'id' from UserInfo
+export type UserRegistrationModel = Omit<UserInfo, '_id'> & {
+    password: string,
+    confirmPassword: string
+};
