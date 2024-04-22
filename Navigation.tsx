@@ -9,6 +9,7 @@ import LoginScreen from './app/feature/login/Login';
 import RegisterScreen from './app/feature/register/RegistrationPage';
 import HomeScreen from './app/feature/home/Home';
 import { useAuth } from './app/store/hooks/useAuth';
+import Profile from './app/feature/profile/Profile';
 
 
 const Stack = createStackNavigator();
@@ -22,9 +23,10 @@ const AuthStack = () => (
 );
 
 const MainStack = () => (
-  <Tab.Navigator>
-    <Tab.Screen name="Home" component={HomeScreen} />
-  </Tab.Navigator>
+  <Stack.Navigator>
+    <Stack.Screen name="Home" component={HomeScreen} />
+    <Stack.Screen name="Profile" component={Profile} />
+  </Stack.Navigator>
 );
 
 const Navigation = () => {

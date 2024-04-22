@@ -25,7 +25,16 @@ export function* loginUser(loginRequest: PayloadAction<LoginRequest>): Generator
     
     let result = yield call(() => axiosRequest({ url: "http://143.198.168.244:3000/api/users/login", method: 'post', data: loginRequest.payload}));
 
-    yield put(setSession(result.data));
+    yield put(setSession({accessToken: result.data.token, userInfo: {
+      _id: result.data._id,
+      firstName: result.data.firstName,
+      lastName: result.data.lastName,
+      userName: result.data.userName,
+      email: result.data.email,
+      profilePic: result.data.profilePic,
+      isBuyer: result.data.isBuyer,
+      address: result.data.address
+    }}));
 
   } catch (e) {
 
@@ -40,8 +49,16 @@ export function* registerUser(userInfo: PayloadAction<UserInfo>): Generator<any,
     yield put(setLoading(true))
 
     let result = yield call(() => axiosRequest({ url: "http://143.198.168.244:3000/api/users/register/v2", method: 'post', data: userInfo.payload }));
-    console.log(result)
-    yield put(setSession(result.data));
+    yield put(setSession({accessToken: result.data.token, userInfo: {
+      _id: result.data._id,
+      firstName: result.data.firstName,
+      lastName: result.data.lastName,
+      userName: result.data.userName,
+      email: result.data.email,
+      profilePic: result.data.profilePic,
+      isBuyer: result.data.isBuyer,
+      address: result.data.address
+    }}));
   } catch (e) {
 
   }
