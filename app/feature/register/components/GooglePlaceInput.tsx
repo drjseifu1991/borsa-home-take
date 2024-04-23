@@ -14,7 +14,7 @@ const GooglePlacesInput = ({onSelectAddress}: GooglePlacesInputProps) => {
         onSelectAddress(details?.name ?? "")
       }}  
       query={{
-        key: 'AIzaSyBYyZDCRIuzPw44wN1FTdTTty47DhCIVFs',
+        key: '',
         language: 'en',
         components: 'country:us'
       }}

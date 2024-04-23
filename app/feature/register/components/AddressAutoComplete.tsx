@@ -13,7 +13,7 @@ const AddressAutocomplete = ({ onSelectAddress }: AddressAutoCompleteProps) => {
         onSelectAddress(details?.name ?? "");
       }}
       query={{
-        key: 'AIzaSyBYyZDCRIuzPw44wN1FTdTTty47DhCIVFs',
+        key: '',
         language: 'en',
         type: '(cities)',
         components: 'country:*'

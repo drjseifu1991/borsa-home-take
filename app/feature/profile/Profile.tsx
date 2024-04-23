@@ -208,7 +208,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                                 placeholder="Type a place"
                                 onPress={(data, details = null) => setAddress(data.description)}
                                 query={{
-                                    key: "AIzaSyBYyZDCRIuzPw44wN1FTdTTty47DhCIVFs",
+                                    key: "",
                                 }}
                                 fetchDetails={true}
                                 onFail={error => console.log(error)}
