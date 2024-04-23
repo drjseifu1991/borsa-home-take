@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons'; // Import Ionicons from Expo icon
 
 type CustoModalProps = {
   open: boolean,
-  onClose: React.Dispatch<SetStateAction<boolean>>,
+  onClose: (value: boolean) => void ,
   title: string
 }
 

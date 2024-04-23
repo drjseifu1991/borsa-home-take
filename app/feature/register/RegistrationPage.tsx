@@ -4,6 +4,9 @@ import * as yup from 'yup'
 import { Formik } from 'formik';
 import { useAuth } from '../../store/hooks/useAuth';
 import { UserInfo, UserRegistrationModel } from '../../model';
+import { GooglePlaceDetail } from 'react-native-google-places-autocomplete';
+import AddressAutocomplete from './components/AddressAutoComplete';
+import GooglePlacesInput from './components/GooglePlaceInput';
 
 const ValidationSchema = yup.object().shape({
     firstName: yup.string().required('First Name is required'),
@@ -35,134 +38,143 @@ const RegistrationPage = () => {
         submitLoginRequest({email: email, password: password})
     }
 
+    const handleAddressSelect = (details: GooglePlaceDetail | null) => {
+        // Extract the formatted address from details
+        const formattedAddress = details?.formatted_address;
+        if(formattedAddress) setAddress(formattedAddress);
+      };
+
     return (
-        <ScrollView>
-            <View style={styles.container}>
-                <Text style={styles.heading1}>Hello Again!</Text>
-                <Formik<UserRegistrationModel>
-                    initialValues={{
-                        firstName: '',
-                        lastName: '',
-                        email: '',
-                        userName: '',
-                        address: '',
-                        isBuyer: true,
-                        profilePic: '',
-                        password: '',
-                        confirmPassword: ''
-                    }}
+        <View style={styles.container}>
+        {/* <Text style={styles.heading1}>Hello Again!</Text> */}
+        <Formik<UserRegistrationModel>
+            initialValues={{
+                firstName: '',
+                lastName: '',
+                email: '',
+                userName: '',
+                address: '',
+                isBuyer: true,
+                profilePic: '',
+                password: '',
+                confirmPassword: ''
+            }}
 
-                    validationSchema={ValidationSchema}
-                    onSubmit={handleRegister}
-                >
-                    {({ handleChange, handleBlur, handleSubmit, values, errors, isSubmitting, isValid }) => (
-                        <View>
-                            <TextInput 
-                                placeholder="First Name" 
-                                style={styles.input} 
-                                value={values.firstName} 
-                                onChangeText={handleChange('firstName')}
-                                onBlur={handleBlur('firstName')}
-                            />
-                            { errors.firstName &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.firstName}</Text>
-                            }
-                            <TextInput 
-                                placeholder="Last Name" 
-                                style={styles.input} 
-                                value={values.lastName} 
-                                onChangeText={handleChange('lastName')}
-                                onBlur={handleBlur('lastName')}
-                            />
-                            { errors.lastName &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.lastName}</Text>
-                            }
-                            <TextInput 
-                                placeholder="Email Address" 
-                                style={styles.input} 
-                                value={values.email} 
-                                onChangeText={handleChange('email')}
-                                onBlur={handleBlur('email')}
-                            />
-                            { errors.email &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
-                            }
-                            <TextInput 
-                                placeholder="User Name" 
-                                style={styles.input} 
-                                value={values.userName} 
-                                onChangeText={handleChange('userName')}
-                                onBlur={handleBlur('userName')}
-                            />
-                            { errors.userName &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.userName}</Text>
-                            }
-                            <TextInput 
-                                placeholder="Adress" 
-                                style={styles.input} 
-                                value={values.address} 
-                                onChangeText={handleChange('address')}
-                                onBlur={handleBlur('address')}
-                            />
-                            { errors.address &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.address}</Text>
-                            }
-                            <TextInput 
-                                placeholder="Profile Picture"
-                                style={styles.input} 
-                                value={values.profilePic} 
-                                onChangeText={handleChange('profilePic')}
-                                onBlur={handleBlur('profilePic')}
-                            />
-                            { errors.profilePic &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.profilePic}</Text>
-                            }
-                            <TextInput 
-                                placeholder="Password" 
-                                style={styles.input} 
-                                value={values.password}
-                                onChangeText={handleChange('password')}
-                                onBlur={handleBlur('password')}
-                                secureTextEntry={true}
-                            />
-                            { errors.password &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
-                            }
-                            <TextInput 
-                                placeholder="Confirm Password" 
-                                style={styles.input} 
-                                value={values.confirmPassword} 
-                                onChangeText={handleChange('confirmPassword')}
-                                onBlur={handleBlur('confirmPassword')}
-                                secureTextEntry={true}
-                            />
-                            { errors.confirmPassword &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.confirmPassword}</Text>
-                            }
-                            {/* <Button onPress={handleSubmit} title="Submit" /> */}
-                            {/* <Button
-                                title="Sign In"
-                                type='solid'
-                                loading= {selectIsLoading}
-                                style={styles.buttonstyle}
-                                onPress={handleSubmit}
-                            /> */}
-                        </View>
-                    )}
-                </Formik>
-                <View style={styles.view2}>
-                    
-                    {/* <TouchableOpacity style={styles.buttonstyle} onPress={handleLogin} load>
-                        <Text style={styles.signintxt}>Sign In</Text>
-                    </TouchableOpacity> */}
+            validationSchema={ValidationSchema}
+            onSubmit={handleRegister}
+        >
+            {({ handleChange, handleBlur, handleSubmit, values, errors, isSubmitting, isValid }) => (
+                <View>
+                    <TextInput 
+                        placeholder="First Name" 
+                        style={styles.input} 
+                        value={values.firstName} 
+                        onChangeText={handleChange('firstName')}
+                        onBlur={handleBlur('firstName')}
+                    />
+                    { errors.firstName &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.firstName}</Text>
+                    }
+                    <TextInput 
+                        placeholder="Last Name" 
+                        style={styles.input} 
+                        value={values.lastName} 
+                        onChangeText={handleChange('lastName')}
+                        onBlur={handleBlur('lastName')}
+                    />
+                    { errors.lastName &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.lastName}</Text>
+                    }
+                    <TextInput 
+                        placeholder="Email Address" 
+                        style={styles.input} 
+                        value={values.email} 
+                        onChangeText={handleChange('email')}
+                        onBlur={handleBlur('email')}
+                    />
+                    { errors.email &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
+                    }
+                    <TextInput 
+                        placeholder="User Name" 
+                        style={styles.input} 
+                        value={values.userName} 
+                        onChangeText={handleChange('userName')}
+                        onBlur={handleBlur('userName')}
+                    />
+                    { errors.userName &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.userName}</Text>
+                    }
+                    {/* <TextInput 
+                        placeholder="Adress" 
+                        style={styles.input} 
+                        value={values.address} 
+                        onChangeText={handleChange('address')}
+                        onBlur={handleBlur('address')}
+                    />
+                    { errors.address &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.address}</Text>
+                    } */}
+                    {/* <GooglePlacesInput/> */}
+                     <AddressAutocomplete onSelectAddress={handleAddressSelect} />
+                    {/* <TextInput 
+                        placeholder="Profile Picture"
+                        style={styles.input} 
+                        value={values.profilePic} 
+                        onChangeText={handleChange('profilePic')}
+                        onBlur={handleBlur('profilePic')}
+                    />
+                    { errors.profilePic &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.profilePic}</Text>
+                    } */}
+                    {/* <TextInput 
+                        placeholder="Password" 
+                        style={styles.input} 
+                        value={values.password}
+                        onChangeText={handleChange('password')}
+                        onBlur={handleBlur('password')}
+                        secureTextEntry={true}
+                    />
+                    { errors.password &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                    }
+                    <TextInput 
+                        placeholder="Confirm Password" 
+                        style={styles.input} 
+                        value={values.confirmPassword} 
+                        onChangeText={handleChange('confirmPassword')}
+                        onBlur={handleBlur('confirmPassword')}
+                        secureTextEntry={true}
+                    />
+                    { errors.confirmPassword &&
+                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.confirmPassword}</Text>
+                    } */}
+                    {/* <Button onPress={handleSubmit} title="Submit" /> */}
+                    {/* <Button
+                        title="Sign In"
+                        type='solid'
+                        loading= {selectIsLoading}
+                        style={styles.buttonstyle}
+                        onPress={handleSubmit}
+                    /> */}
+                </View>
+            )}
+        </Formik>
+        <View style={styles.view2}>
+            
+            {/* <TouchableOpacity style={styles.buttonstyle} onPress={handleLogin} load>
+                <Text style={styles.signintxt}>Sign In</Text>
+            </TouchableOpacity> */}
 
-                </View>
-                
-                <View style={{bottom:'-2%'}}>
-                    <Text style={{textAlign:'center'}}>Already have an account?{" "}<Text style={{color:'#1580FF'}}>Sign In here</Text> </Text>
-                </View>
-            </View>
-        </ScrollView>
+        </View>
+        
+        {/* <View style={{bottom:'-2%'}}>
+            <Text style={{textAlign:'center'}}>Already have an account?{" "}<Text style={{color:'#1580FF'}}>Sign In here</Text> </Text>
+        </View> */}
+    </View>
+        // <ScrollView>
+           
+        // </ScrollView>
     )
 }
 

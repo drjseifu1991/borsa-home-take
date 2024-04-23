@@ -5,22 +5,50 @@ import { useAuth } from '../../store/hooks/useAuth'
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Divider } from '@rneui/base';
 import CustomModal from './components/CustomModal';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 type Props = {
     navigation: StackNavigationProp<any, 'Home'>; // Define the navigation prop type
 };
 
 const Profile: React.FC<Props> = ({ navigation }) => {
-    const { session } = useAuth()
-    const [editNameModalVisibile, setEditNameModalVisible] = useState(false);
-    const [editUserNameModalVisibile, setEditUserNameModalVisible] = useState(false);
-    const [editEmailModalVisibile, setEdiEmailModalVisible] = useState(false);
-    const [editAddressModalVisibile, setEditAddressModalVisible] = useState(false);
+    const { 
+        session, 
+        selectIsLoading, 
+        editProfile,
+        setEditNameModalVisible,
+        setEditUserNameModalVisible,
+        setEditEmailModalVisible,
+        setEditAddressModalVisible,
+        selectEditNameModalVisible,
+        selectEditUserNameModalVisible,
+        selectEditEmailModalVisible,
+        selectEditAddressModalVisible 
+    } = useAuth()
     const [firstName, setFirstName] = useState<string>(session?.userInfo.firstName ?? '')
     const [lastName, setLastName] = useState<string>(session?.userInfo.lastName ?? '')
     const [userName, setUserName] = useState<string>(session?.userInfo.userName ?? '')
     const [email, setEmail] = useState<string>(session?.userInfo.email ?? '')
     const [address, setAddress] = useState<string>(session?.userInfo.address ?? '')
+
+    const handleEditName = () => {
+        editProfile({_id: session?.userInfo._id ?? "", firstName: firstName, lastName: lastName})
+    }
+    const handleEditUserName = () => {
+        editProfile({_id: session?.userInfo._id ?? "", userName: userName})
+    }
+    const handleEditEmail = () => {
+        editProfile({_id: session?.userInfo._id ?? "", email: email})
+    }
+    const handleEditAddress = () => {
+        editProfile({_id: session?.userInfo._id ?? "", address: address})
+    }
+
+    const handleSelectAddress = (address: string) => {
+        setAddress(address)
+    }
+
+    
     return (
         <View style={styles.page}>
             <View style={styles.item}>
@@ -65,7 +93,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     />
                     <Text>Email</Text>
                 </View>
-                <Text style={styles.textLink} onPress={() => setEdiEmailModalVisible(true)}>{session?.userInfo.email}</Text>
+                <Text style={styles.textLink} onPress={() => setEditEmailModalVisible(true)}>{session?.userInfo.email}</Text>
             </View>
             <Divider/>
             <View style={styles.item}>
@@ -81,9 +109,9 @@ const Profile: React.FC<Props> = ({ navigation }) => {
             </View>
             <Divider/>
             {
-                editNameModalVisibile && 
+                selectEditNameModalVisible && 
                 <CustomModal
-                    open={editNameModalVisibile}
+                    open={selectEditNameModalVisible}
                     onClose={setEditNameModalVisible}
                     title='Edit Name'
                 >
@@ -109,14 +137,16 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                         <Button
                             title='SUBMIT'
                             style={styles.button}
+                            loading={selectIsLoading}
+                            onPress={handleEditName}
                         />
                     </View>
                 </CustomModal>
             }
             {
-                editUserNameModalVisibile && 
+                selectEditUserNameModalVisible && 
                 <CustomModal
-                    open={editUserNameModalVisibile}
+                    open={selectEditUserNameModalVisible}
                     onClose={setEditUserNameModalVisible}
                     title='Edit User Name'
                 >
@@ -133,15 +163,17 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                         <Button
                             title='SUBMIT'
                             style={styles.button}
+                            loading={selectIsLoading}
+                            onPress={handleEditUserName}
                         />
                     </View>
                 </CustomModal>
             }
             {
-                editEmailModalVisibile && 
+                selectEditEmailModalVisible && 
                 <CustomModal
-                    open={editEmailModalVisibile}
-                    onClose={setEdiEmailModalVisible}
+                    open={selectEditEmailModalVisible}
+                    onClose={setEditEmailModalVisible}
                     title='Edit Email'
                 >
                     <View style={styles.modalView}>
@@ -157,30 +189,52 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                         <Button
                             title='SUBMIT'
                             style={styles.button}
+                            loading={selectIsLoading}
+                            onPress={handleEditEmail}
                         />
                     </View>
                 </CustomModal>
             }
             {
-                editAddressModalVisibile && 
+                selectEditAddressModalVisible && 
                 <CustomModal
-                    open={editAddressModalVisibile}
+                    open={selectEditAddressModalVisible}
                     onClose={setEditAddressModalVisible}
                     title='Edit Address'
                 >
                     <View style={styles.modalView}>
                         <View style={styles.inputItem}>
-                            <Text>Address</Text>
-                            <TextInput 
-                                placeholder="Address" 
-                                value={address}
-                                onChangeText={setAddress}
-                                style={styles.textInput}
+                            <GooglePlacesAutocomplete
+                                placeholder="Type a place"
+                                onPress={(data, details = null) => setAddress(data.description)}
+                                query={{
+                                    key: "AIzaSyBYyZDCRIuzPw44wN1FTdTTty47DhCIVFs",
+                                }}
+                                fetchDetails={true}
+                                onFail={error => console.log(error)}
+                                onNotFound={() => console.log('no results')}
+                                listEmptyComponent={() => (
+                                    <Text>No results were found</Text>
+                                )}
+                                styles={{
+                                    textInputContainer: {
+                                      width: '100%',
+                                      borderWidth: 1,
+                                      borderRadius: 5
+                                    },
+                                    description: {
+                                      fontWeight: 'bold'
+                                    },
+                                    predefinedPlacesDescription: {
+                                      color: '#1faadb'
+                                    }}}
                             />
                         </View>
                         <Button
                             title='SUBMIT'
                             style={styles.button}
+                            loading={selectIsLoading}
+                            onPress={handleEditAddress}
                         />
                     </View>
                 </CustomModal>

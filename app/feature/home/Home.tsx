@@ -15,6 +15,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [users, setUsers] = useState<UserInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const {session} = useAuth()
+  console.log(session)
 
   const fetchUsers = async (page: number) => {
     setIsLoading(true);

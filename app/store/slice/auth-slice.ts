@@ -8,13 +8,20 @@ import { Session } from "../../model/session";
 interface AuthState {
   session: Session;
   isLoading: boolean;
+  editNameModalVisibile: boolean;
+  editUserNameModalVisibile: boolean;
+  editEmailModalVisibile: boolean;
+  editAddressModalVisibile: boolean;
 }
 
 // Define the initial state using that type
 const initialState: AuthState = {
   session: null,
   isLoading: false,
-
+  editNameModalVisibile: false,
+  editUserNameModalVisibile: false,
+  editEmailModalVisibile: false,
+  editAddressModalVisibile: false
 };
 
 export const authSlice = createSlice({
@@ -30,37 +37,39 @@ export const authSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+    setEditNameModalVisible: (state, action: PayloadAction<boolean>) => {
+      state.editNameModalVisibile = action.payload;
+    },
+    setEditUserNameModalVisible: (state, action: PayloadAction<boolean>) => {
+      state.editUserNameModalVisibile = action.payload;
+    },
+    setEditEmailModalVisible: (state, action: PayloadAction<boolean>) => {
+      state.editEmailModalVisibile = action.payload;
+    },
+    setEditAddressModalVisible: (state, action: PayloadAction<boolean>) => {
+      state.editAddressModalVisibile = action.payload;
+    },
   },
 });
 
-export function logIn(request: LoginRequest) {
-  return async function logInThunk(dispatch: any, getState: any) {
-    try {
-      dispatch(setLoading(true)); // Start loading
 
-      const response = await axios.post("appEndpoint.postAccessToken", request);
-      const userInfo = await axios.get("appEndpoint.getQuery", {
-        params: {
-          access_token: response.data,
-          query: "authQueries.getUser(request.userName)",
-        },
-      });
-     
-      dispatch(setSession({ accessToken: response.data, userInfo: userInfo.data }));
- 
-    } catch (error: any) {
-      
-    }
-    finally {
-      dispatch(setLoading(false)); 
-    }
-  };
-}
 
-export const { setSession, logOut,setLoading } = authSlice.actions;
+export const { 
+  setSession, 
+  logOut,
+  setLoading, 
+  setEditNameModalVisible, 
+  setEditUserNameModalVisible, 
+  setEditEmailModalVisible, 
+  setEditAddressModalVisible 
+} = authSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectSession = (state: RootState):Session => state.auth.session;
 export const selectIsLoading = (state: RootState):boolean => state.auth.isLoading;
+export const selectEditNameModalVisibile = (state: RootState):boolean => state.auth.editNameModalVisibile;
+export const selectEditUserNameModalVisibile = (state: RootState):boolean => state.auth.editUserNameModalVisibile;
+export const selectEditEmailModalVisibile = (state: RootState):boolean => state.auth.editEmailModalVisibile;
+export const selectEditAddressModalVisibile = (state: RootState):boolean => state.auth.editAddressModalVisibile;
 
 export const authReducer = authSlice.reducer;

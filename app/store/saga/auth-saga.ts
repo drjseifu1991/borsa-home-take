@@ -1,8 +1,8 @@
-import { call, takeEvery, put } from "redux-saga/effects";
+import { call, takeEvery, put, select } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
 import Axios from "axios";
-import { LoginRequest, UserInfo } from "../../model";
-import {  setLoading, setSession } from "../slice";
+import { LoginRequest, UserEditModel, UserInfo, UserRegistrationModel } from "../../model";
+import {  setLoading, setSession, selectSession, setEditNameModalVisible, setEditUserNameModalVisible, setEditEmailModalVisible, setEditAddressModalVisible } from "../slice";
 import { sagaActions } from "./saga-actions";
 
 type axiosProps = {
@@ -44,7 +44,7 @@ export function* loginUser(loginRequest: PayloadAction<LoginRequest>): Generator
   }
 }
 
-export function* registerUser(userInfo: PayloadAction<UserInfo>): Generator<any, void, any> {
+export function* registerUser(userInfo: PayloadAction<UserRegistrationModel>): Generator<any, void, any> {
   try {
     yield put(setLoading(true))
 
@@ -63,11 +63,42 @@ export function* registerUser(userInfo: PayloadAction<UserInfo>): Generator<any,
 
   }
   finally {
+    yield put(setLoading(false))
+  }
+}
+
+export function* editUser(userInfo: PayloadAction<UserEditModel>): Generator<any, void, any> {
+  try{
     yield put(setLoading(true))
+  
+    let editedInfo: Omit<UserEditModel, '_id'> = { ...userInfo.payload };
+    let result = yield call(() => axiosRequest({url: `http://143.198.168.244:3000/api/users/profile?id=${userInfo.payload._id}`, method: "put", data: editedInfo}))
+    const currentSession: any = yield select(selectSession);
+    const currentUserInfo: UserInfo = currentSession.userInfo;
+    yield put(setSession({accessToken: result.data.token, userInfo: {
+      _id: result.data._id ?? currentUserInfo._id,
+      firstName: result.data.firstName ?? currentUserInfo.firstName,
+      lastName: result.data.lastName ?? currentUserInfo.lastName,
+      userName: result.data.userName ?? currentUserInfo.userName,
+      email: result.data.email ?? currentUserInfo.email,
+      profilePic: result.data.profilePic ?? currentUserInfo.profilePic,
+      isBuyer: result.data.isBuyer !== null || result.data.isBuyer !== undefined ? result.data.isBuyer : currentUserInfo.isBuyer,
+      address: result.data.address ?? currentUserInfo.address 
+    }}));
+  } catch (e) {
+
+  }
+  finally {
+    yield put(setLoading(false))
+    yield put(setEditNameModalVisible(false))
+    yield put(setEditUserNameModalVisible(false))
+    yield put(setEditEmailModalVisible(false))
+    yield put(setEditAddressModalVisible(false))
   }
 }
 
 export default function* rootSaga() {
   yield takeEvery(sagaActions.LOGIN_SUCCESS, loginUser);
   yield takeEvery(sagaActions.REGISTER_SUCCESS, registerUser);
+  yield takeEvery(sagaActions.EDIT_SUCCESS, editUser);
 }
