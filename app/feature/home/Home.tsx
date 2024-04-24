@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useAuth } from '../../store/hooks/useAuth';
 import { UserInfo } from '../../model';
 import UserCard from './components/UserCard';
+import { useError } from '../../store/hooks/useError';
 
 
 type Props = {
@@ -12,10 +13,11 @@ type Props = {
 };
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
+  const {session} = useAuth()
+  const { setError } = useError()
   const [users, setUsers] = useState<UserInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const {session} = useAuth()
-  console.log(session)
+  const [currentPage, setCurrentPage] = useState(1)
 
   const fetchUsers = async (page: number) => {
     setIsLoading(true);
@@ -25,15 +27,17 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       // Simulate delay for loading indicator
       setTimeout(() => {
         setUsers(prevUsers => [...prevUsers, ...data]);
-        setIsLoading(false);
+        setIsLoading(false); 
       }, 1000);
-    } catch (error) {
-      console.error('Error fetching users:', error);
+    } catch (e: any) {
+      console.log(e)
+      setError(e?.response?.data?.message ?? e?.message)
       setIsLoading(false);
     }
   };
 
   const loadMoreUsers = () => {
+    if (isLoading) return;
     const nextPage = Math.ceil(users.length / 10) + 1;
     fetchUsers(nextPage);
   };

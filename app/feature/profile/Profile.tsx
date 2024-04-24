@@ -16,6 +16,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
         session, 
         selectIsLoading, 
         editProfile,
+        logOut,
         setEditNameModalVisible,
         setEditUserNameModalVisible,
         setEditEmailModalVisible,
@@ -43,11 +44,6 @@ const Profile: React.FC<Props> = ({ navigation }) => {
     const handleEditAddress = () => {
         editProfile({_id: session?.userInfo._id ?? "", address: address})
     }
-
-    const handleSelectAddress = (address: string) => {
-        setAddress(address)
-    }
-
     
     return (
         <View style={styles.page}>
@@ -57,6 +53,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     style={ styles.profileImage }
                     resizeMode="cover"
                 />
+                <Button title={"Logout"} type='outline' onPress={logOut}/>
 
             </View>
             <Divider/>
@@ -134,12 +131,14 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                                 style={styles.textInput}
                             />
                         </View>
-                        <Button
-                            title='SUBMIT'
-                            style={styles.button}
-                            loading={selectIsLoading}
-                            onPress={handleEditName}
-                        />
+                        <View style={styles.inputItem}>
+                            <Button
+                                title='SUBMIT'
+                                style={styles.button}
+                                loading={selectIsLoading}
+                                onPress={handleEditName}
+                            />
+                        </View>
                     </View>
                 </CustomModal>
             }
@@ -160,12 +159,14 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                                 style={styles.textInput}
                             />
                         </View>
-                        <Button
-                            title='SUBMIT'
-                            style={styles.button}
-                            loading={selectIsLoading}
-                            onPress={handleEditUserName}
-                        />
+                        <View style={styles.inputItem}>
+                            <Button
+                                title='SUBMIT'
+                                style={styles.button}
+                                loading={selectIsLoading}
+                                onPress={handleEditUserName}
+                            />
+                        </View>
                     </View>
                 </CustomModal>
             }
@@ -186,12 +187,14 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                                 style={styles.textInput}
                             />
                         </View>
-                        <Button
-                            title='SUBMIT'
-                            style={styles.button}
-                            loading={selectIsLoading}
-                            onPress={handleEditEmail}
-                        />
+                        <View style={styles.inputItem}>
+                            <Button
+                                title='SUBMIT'
+                                style={styles.button}
+                                loading={selectIsLoading}
+                                onPress={handleEditEmail}
+                            />
+                        </View>
                     </View>
                 </CustomModal>
             }
@@ -206,16 +209,14 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                         <View style={styles.inputItem}>
                             <GooglePlacesAutocomplete
                                 placeholder="Type a place"
-                                onPress={(data, details = null) => setAddress(data.description)}
+                                onPress={(data) => {
+                                    setAddress(data.description);
+                                }}
                                 query={{
                                     key: "",
                                 }}
+                                disableScroll={true}
                                 fetchDetails={true}
-                                onFail={error => console.log(error)}
-                                onNotFound={() => console.log('no results')}
-                                listEmptyComponent={() => (
-                                    <Text>No results were found</Text>
-                                )}
                                 styles={{
                                     textInputContainer: {
                                       width: '100%',
@@ -230,12 +231,14 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                                     }}}
                             />
                         </View>
-                        <Button
-                            title='SUBMIT'
-                            style={styles.button}
-                            loading={selectIsLoading}
-                            onPress={handleEditAddress}
-                        />
+                        <View style={styles.inputItem}>
+                            <Button
+                                title='SUBMIT'
+                                style={styles.button}
+                                loading={selectIsLoading}
+                                onPress={handleEditAddress}
+                            />
+                        </View>
                     </View>
                 </CustomModal>
             }

@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "./app-store-hook";
-import { Session, LoginRequest, UserEditModel } from "../../model";
+import { Session, LoginRequest, UserEditModel, UserRegistrationModel } from "../../model";
 import { 
   logOut,
   selectIsLoading, 
@@ -19,6 +19,7 @@ export const useAuth = (): {
   session: Session;
   submitLoginRequest: (request: LoginRequest) => void;
   editProfile: (editedUser: UserEditModel) => void;
+  registerUser: (userInfo: UserRegistrationModel) => void;
   logOut: () => void;
   setEditNameModalVisible: (value: boolean) => void,
   setEditUserNameModalVisible: (value: boolean) => void,
@@ -42,10 +43,13 @@ export const useAuth = (): {
   return {
     session,
     submitLoginRequest: (request: LoginRequest) => {
-      dispatch({ type: sagaActions.LOGIN_SUCCESS, payload: {...request}})
+      dispatch({ type: sagaActions.LOGIN_REQUEST, payload: {...request}})
     },
     editProfile: (editedInfo: UserEditModel) => {
-      dispatch({type: sagaActions.EDIT_SUCCESS, payload: {...editedInfo}})
+      dispatch({type: sagaActions.EDIT_PROFILE, payload: {...editedInfo}})
+    },
+    registerUser: (userInfo: UserRegistrationModel) => {
+      dispatch({type: sagaActions.REGISTER_USER, payload: {...userInfo}})
     },
     logOut: () => {
       dispatch(logOut());

@@ -5,11 +5,16 @@ import LoginScreenOne from './app/feature/login/Login';
 import { store } from './app/store/app-store';
 import RegistrationPage from './app/feature/register/RegistrationPage';
 import Navigation from './Navigation';
+import { PaperProvider } from 'react-native-paper';
+import ErrorSnackbar from './app/feature/error/ErrorSnackBar';
 
 export default function App() {
   return (
     <Provider store={store}>
-      <Navigation/>
+      <PaperProvider>
+        <Navigation/>
+        <ErrorSnackbar/>
+      </PaperProvider>
     </Provider>
   );
 }

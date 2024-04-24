@@ -1,21 +1,30 @@
 import React, { useState} from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View,Image } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View,Image, GestureResponderEvent } from 'react-native';
 import { Button } from '@rneui/base';
-import { useAuth } from '../../store/hooks/useAuth';
+import * as yup from 'yup'
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Formik } from 'formik';
+import { useAuth } from '../../store/hooks/useAuth';
+import { LoginRequest } from '../../model';
 
 type Props = {
     navigation: StackNavigationProp<any, 'Login'>; // Define the navigation prop type
 };
 
+const ValidationSchema = yup.object().shape({
+    email: yup.string().email('Invalid email format').required('Email is required'),
+    password: yup.string().required('Password is required')
+// .matches(/\w*[a-z]\w*/, 'Password must have a small letter')
+// .matches(/\w*[A-Z]\w*/, 'Password must have a capital letter')
+// .matches(/\d/, 'Password must have a number')
+// .min(8, ({min}) => `Password must be at least ${min} characters`)
+});
 
 const LoginPage: React.FC<Props> = ({navigation}) => {
     const { submitLoginRequest, selectIsLoading } = useAuth()
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        submitLoginRequest({email: email, password: password})
+    const handleLogin = (values: LoginRequest) => {
+        submitLoginRequest(values)
     }
 
     return (
@@ -26,32 +35,50 @@ const LoginPage: React.FC<Props> = ({navigation}) => {
             </View>
 
             <View style={styles.view2}>
-                <TextInput 
-                    placeholder="Email Address" 
-                    style={styles.email} 
-                    value={email} 
-                    onChangeText={setEmail}
-                />
-                <TextInput 
-                    placeholder="Password" 
-                    style={styles.email} 
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={true}
-                />
-                <Text style={styles.fogPw}>Forgot Password</Text>
+            <Formik<LoginRequest>
+                    initialValues={{
+                        email: '',
+                        password: '',
+                    }}
 
-                <Button
-                    title="Sign In"
-                    type='solid'
-                    loading= {selectIsLoading}
-                    style={styles.buttonstyle}
-                    onPress={handleLogin}
-                />
-                {/* <TouchableOpacity style={styles.buttonstyle} onPress={handleLogin} load>
-                    <Text style={styles.signintxt}>Sign In</Text>
-                </TouchableOpacity> */}
-
+                    validationSchema={ValidationSchema}
+                    onSubmit={handleLogin}
+                >
+                    {({ handleChange, handleBlur, handleSubmit, values, errors, isSubmitting, isValid, setFieldValue }) => (
+                        <View>
+                            <TextInput 
+                                placeholder="Email Address" 
+                                style={styles.input} 
+                                value={values.email} 
+                                onChangeText={handleChange('email')}
+                                onBlur={handleBlur('email')}
+                            />
+                            { errors.email &&
+                                <Text style={styles.error}>{errors.email}</Text>
+                            }
+                            <TextInput 
+                                placeholder="Password" 
+                                style={styles.input} 
+                                value={values.password} 
+                                onChangeText={handleChange('password')}
+                                onBlur={handleBlur('password')}
+                            />
+                            { errors.password &&
+                                <Text style={styles.error}>{errors.password}</Text>
+                            }
+                            <View style={styles.buttonContainer}>
+                                <Button
+                                    title="SUBMIT"
+                                    type='solid'
+                                    loading= {selectIsLoading}
+                                    style={styles.buttonstyle}
+                                    onPress={handleSubmit as (e?: GestureResponderEvent) => void}
+                                />
+                            </View>
+                        </View>
+                        
+                    )}
+                </Formik>
                 <Text style={styles.continue}>- Or continue with -</Text>
 
                 {/*---login button section (google apple facebook)--- */}
@@ -98,37 +125,37 @@ const styles = StyleSheet.create({
         paddingHorizontal:'4%',
         backgroundColor:'#EEF1F7'
     },
-
     view1:{
         flex:1,
         backgroundColor:'#EEF1F7',
         top:'8%'
-
     },
-
     view2:{
         flex:2,
         bottom:'7%'
-        
     },
-
-    //text styles
     heading1:{
         fontSize:30,
         fontWeight:'bold',
         textAlign:'center'
 
     },
-
     para1:{
         fontSize:18,
         opacity:0.7,
         textAlign:'center',
         paddingHorizontal:'20%',
         top:3
-        
     },
-
+    input:{
+        height: 55,
+        margin: 12,
+        borderWidth: 0,
+        padding: 10,
+        borderRadius:8,
+        backgroundColor:'white',
+        color:'#AFADAD',
+    },
     email:{
         height: 55,
         margin: 12,
@@ -138,46 +165,37 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         color:'#AFADAD',
     },
-
-    fogPw:{
-        textAlign:"right",
-        right:14,
-        top:2,
+    buttonContainer: {
+        marginHorizontal: 12,
+        marginTop:20
     },
-
     buttonstyle:{
-        borderRadius:10,
-        height: 55,
+        borderRadius: 20,
+        height: 60,
         margin: 12,
-        backgroundColor:'#FC6B68',
         justifyContent: 'center',
         alignItems: 'center',
         top:40,
-
-
     },
-
     signintxt:{
         color:'white',
         fontWeight:'bold',
         fontSize:18,
-
     },
-
-
-
     continue:{
         textAlign:'center',
         top:80,
     },
-
     loginBTNS:{
         flexDirection:'row',
         top:'35%',
         justifyContent: 'space-evenly',
-        
+    },
+    error: {
+        marginHorizontal: 12,
+        fontSize: 10, 
+        color: 'red'
     }
-    
 })
 
 export default LoginPage

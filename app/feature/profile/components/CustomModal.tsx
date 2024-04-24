@@ -25,7 +25,7 @@ const CustomModal = (props: PropsWithChildren<CustoModalProps>) => {
               <Ionicons name="close" size={24} color="black" />
             </TouchableOpacity>
           </View>
-          <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <ScrollView style={{ maxHeight: '100%' }}>
             {props.children}
           </ScrollView>
         </View>
