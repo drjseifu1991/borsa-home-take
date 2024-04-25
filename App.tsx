@@ -1,29 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 import { Provider } from 'react-redux';
-import { StyleSheet, Text, View } from 'react-native';
-import LoginScreenOne from './app/feature/login/Login';
-import { store } from './app/store/app-store';
-import RegistrationPage from './app/feature/register/RegistrationPage';
-import Navigation from './Navigation';
 import { PaperProvider } from 'react-native-paper';
-import ErrorSnackbar from './app/feature/error/ErrorSnackBar';
+import { store } from './app/store/app-store';
+import { ErrorSnackbar } from './app/components';
+import Navigation from './Navigation';
+import { Text, View } from 'react-native';
 
+// App component serving as the root component of the application
 export default function App() {
   return (
     <Provider store={store}>
       <PaperProvider>
-        <Navigation/>
-        <ErrorSnackbar/>
+          <Navigation /> 
+        <ErrorSnackbar /> 
       </PaperProvider>
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

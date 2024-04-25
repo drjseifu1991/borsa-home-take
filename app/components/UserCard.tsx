@@ -1,8 +1,8 @@
 import { View, Image, Text, StyleSheet } from 'react-native'
 import SvgUri from 'react-native-svg-uri';
-import { UserInfo } from '../../../model'
+import { UserInfo } from '../model'
 
-const UserCard = ({ item }: { item: UserInfo }) => {
+export const UserCard = ({ item }: { item: UserInfo }) => {
 
   return (
     <View style={styles.card}>
@@ -22,13 +22,13 @@ const UserCard = ({ item }: { item: UserInfo }) => {
                     <SvgUri
                         width="20"
                         height="20"
-                        source={require('../../../../assets/Buyer.svg')}
+                        source={require('../../assets/Buyer.svg')}
                     />
                     : 
                     <SvgUri
                         width="20"
                         height="20"
-                        source={require('../../../../assets/PlaceOutlined.svg')}
+                        source={require('../../assets/PlaceOutlined.svg')}
                     />
             }
             </View>
@@ -38,7 +38,7 @@ const UserCard = ({ item }: { item: UserInfo }) => {
                 <SvgUri
                     width="20"
                     height="20"
-                    source={require('../../../../assets/AlternateEmailOutlined.svg')}
+                    source={require('../../assets/AlternateEmailOutlined.svg')}
                 />
                 <Text>{item.userName}</Text>
             </View>
@@ -46,7 +46,7 @@ const UserCard = ({ item }: { item: UserInfo }) => {
                 <SvgUri
                     width="20"
                     height="20"
-                    source={require('../../../../assets/EmailOutlined.svg')}
+                    source={require('../../assets/EmailOutlined.svg')}
                 />
                 <Text>{item.email}</Text>
             </View>
@@ -55,7 +55,7 @@ const UserCard = ({ item }: { item: UserInfo }) => {
             <SvgUri
                 width="20"
                 height="20"
-                source={require('../../../../assets/PlaceOutlined.svg')}
+                source={require('../../assets/PlaceOutlined.svg')}
             />
             <Text>{item.address}</Text>
         </View>

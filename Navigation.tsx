@@ -1,42 +1,40 @@
-// Navigation.js
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-// Screens
-import LoginScreen from './app/feature/login/Login';
-import RegisterScreen from './app/feature/register/RegistrationPage';
-import HomeScreen from './app/feature/home/Home';
+import { LoginPage, RegistrationPage, HomePage, ProfilePage } from './app/pages';
 import { useAuth } from './app/store/hooks/useAuth';
-import Profile from './app/feature/profile/Profile';
 
-
+// Create Stack and Tab navigators
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Authentication Stack for login and registration
 const AuthStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="Login" component={LoginScreen} />
-    <Stack.Screen name="Register" component={RegisterScreen} />
+    <Stack.Screen name="Login" component={LoginPage} />
+    <Stack.Screen name="Register" component={RegistrationPage} />
   </Stack.Navigator>
 );
 
+// Main Stack for home and profile pages
 const MainStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="Home" component={HomeScreen} />
-    <Stack.Screen name="Profile" component={Profile} />
+    <Stack.Screen name="Home" component={HomePage} />
+    <Stack.Screen name="Profile" component={ProfilePage} />
   </Stack.Navigator>
 );
 
+// Navigation component to switch between authentication and main stacks based on session
 const Navigation = () => {
-  const { session } = useAuth();
+  const { session } = useAuth(); // Get session status from custom hook
 
   return (
     <NavigationContainer>
+      {/* Render AuthStack if session is not active, otherwise render MainStack */}
       {session ? <MainStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };
 
-export default Navigation;
+export default Navigation; // Export the Navigation component

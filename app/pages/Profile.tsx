@@ -1,20 +1,21 @@
-import React, { useState } from 'react'
-import { View, Image, StyleSheet, Text, Modal, Pressable, Alert, TextInput } from 'react-native'
-import SvgUri from 'react-native-svg-uri'
-import { useAuth } from '../../store/hooks/useAuth'
+import React, { useState } from 'react';
+import { View, Image, StyleSheet, Text, TextInput } from 'react-native';
+import SvgUri from 'react-native-svg-uri';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Divider } from '@rneui/base';
-import CustomModal from './components/CustomModal';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { MAP_AP_KEY } from "@env";
+import { useAuth } from '../store/hooks/useAuth';
+import { CustomModal } from '../components';
 
 type Props = {
-    navigation: StackNavigationProp<any, 'Home'>; // Define the navigation prop type
+    navigation: StackNavigationProp<any, 'Profile'>; // Define the navigation prop type
 };
 
-const Profile: React.FC<Props> = ({ navigation }) => {
-    const { 
-        session, 
-        selectIsLoading, 
+export const ProfilePage: React.FC<Props> = ({ navigation }) => {
+    const {
+        session,
+        selectIsLoading,
         editProfile,
         logOut,
         setEditNameModalVisible,
@@ -24,89 +25,87 @@ const Profile: React.FC<Props> = ({ navigation }) => {
         selectEditNameModalVisible,
         selectEditUserNameModalVisible,
         selectEditEmailModalVisible,
-        selectEditAddressModalVisible 
-    } = useAuth()
-    const [firstName, setFirstName] = useState<string>(session?.userInfo.firstName ?? '')
-    const [lastName, setLastName] = useState<string>(session?.userInfo.lastName ?? '')
-    const [userName, setUserName] = useState<string>(session?.userInfo.userName ?? '')
-    const [email, setEmail] = useState<string>(session?.userInfo.email ?? '')
-    const [address, setAddress] = useState<string>(session?.userInfo.address ?? '')
+        selectEditAddressModalVisible
+    } = useAuth();
+    const [firstName, setFirstName] = useState<string>(session?.userInfo.firstName ?? '');
+    const [lastName, setLastName] = useState<string>(session?.userInfo.lastName ?? '');
+    const [userName, setUserName] = useState<string>(session?.userInfo.userName ?? '');
+    const [email, setEmail] = useState<string>(session?.userInfo.email ?? '');
+    const [address, setAddress] = useState<string>(session?.userInfo.address ?? '');
 
     const handleEditName = () => {
-        editProfile({_id: session?.userInfo._id ?? "", firstName: firstName, lastName: lastName})
-    }
+        editProfile({ _id: session?.userInfo._id ?? "", firstName: firstName, lastName: lastName });
+    };
     const handleEditUserName = () => {
-        editProfile({_id: session?.userInfo._id ?? "", userName: userName})
-    }
+        editProfile({ _id: session?.userInfo._id ?? "", userName: userName });
+    };
     const handleEditEmail = () => {
-        editProfile({_id: session?.userInfo._id ?? "", email: email})
-    }
+        editProfile({ _id: session?.userInfo._id ?? "", email: email });
+    };
     const handleEditAddress = () => {
-        editProfile({_id: session?.userInfo._id ?? "", address: address})
-    }
-    
+        editProfile({ _id: session?.userInfo._id ?? "", address: address });
+    };
+
     return (
         <View style={styles.page}>
             <View style={styles.item}>
                 <Image
-                    source={{ uri: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }} // Default placeholder image
-                    style={ styles.profileImage }
+                    source={{ uri: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }}
+                    style={styles.profileImage}
                     resizeMode="cover"
                 />
-                <Button title={"Logout"} type='outline' onPress={logOut}/>
-
+                <Button title={"Logout"} type='outline' onPress={logOut} />
             </View>
-            <Divider/>
+            <Divider />
             <View style={styles.item}>
                 <View style={styles.textWithSVG}>
                     <SvgUri
                         width="20"
                         height="20"
-                        source={require('../../../assets/AccountCircleOutlined.svg')}
+                        source={require('../../assets/AccountCircleOutlined.svg')}
                     />
                     <Text>Name</Text>
                 </View>
                 <Text style={styles.textLink} onPress={() => setEditNameModalVisible(true)}>{`${session?.userInfo.firstName} ${session?.userInfo.lastName}`}</Text>
             </View>
-            <Divider/>
+            <Divider />
             <View style={styles.item}>
                 <View style={styles.textWithSVG}>
                     <SvgUri
                         width="20"
                         height="20"
-                        source={require('../../../assets/AlternateEmailOutlined.svg')}
+                        source={require('../../assets/AlternateEmailOutlined.svg')}
                     />
                     <Text>Username</Text>
                 </View>
                 <Text style={styles.textLink} onPress={() => setEditUserNameModalVisible(true)}>{session?.userInfo.userName}</Text>
             </View>
-            <Divider/>
+            <Divider />
             <View style={styles.item}>
                 <View style={styles.textWithSVG}>
                     <SvgUri
                         width="20"
                         height="20"
-                        source={require('../../../assets/EmailOutlined.svg')}
+                        source={require('../../assets/EmailOutlined.svg')}
                     />
                     <Text>Email</Text>
                 </View>
                 <Text style={styles.textLink} onPress={() => setEditEmailModalVisible(true)}>{session?.userInfo.email}</Text>
             </View>
-            <Divider/>
+            <Divider />
             <View style={styles.item}>
                 <View style={styles.textWithSVG}>
                     <SvgUri
                         width="20"
                         height="20"
-                        source={require('../../../assets/PlaceOutlined.svg')}
+                        source={require('../../assets/PlaceOutlined.svg')}
                     />
                     <Text>Address</Text>
                 </View>
                 <Text style={styles.textLink} onPress={() => setEditAddressModalVisible(true)}>{session?.userInfo.address}</Text>
             </View>
-            <Divider/>
-            {
-                selectEditNameModalVisible && 
+            <Divider />
+            {selectEditNameModalVisible &&
                 <CustomModal
                     open={selectEditNameModalVisible}
                     onClose={setEditNameModalVisible}
@@ -115,8 +114,8 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     <View style={styles.modalView}>
                         <View style={styles.inputItem}>
                             <Text>First Name</Text>
-                            <TextInput 
-                                placeholder="First Name" 
+                            <TextInput
+                                placeholder="First Name"
                                 value={firstName}
                                 onChangeText={setFirstName}
                                 style={styles.textInput}
@@ -124,8 +123,8 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                         </View>
                         <View style={styles.inputItem}>
                             <Text>Last Name</Text>
-                            <TextInput 
-                                placeholder="Last Name" 
+                            <TextInput
+                                placeholder="Last Name"
                                 value={lastName}
                                 onChangeText={setLastName}
                                 style={styles.textInput}
@@ -142,8 +141,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     </View>
                 </CustomModal>
             }
-            {
-                selectEditUserNameModalVisible && 
+            {selectEditUserNameModalVisible &&
                 <CustomModal
                     open={selectEditUserNameModalVisible}
                     onClose={setEditUserNameModalVisible}
@@ -152,8 +150,8 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     <View style={styles.modalView}>
                         <View style={styles.inputItem}>
                             <Text>User Name</Text>
-                            <TextInput 
-                                placeholder="User Name" 
+                            <TextInput
+                                placeholder="User Name"
                                 value={userName}
                                 onChangeText={setUserName}
                                 style={styles.textInput}
@@ -170,8 +168,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     </View>
                 </CustomModal>
             }
-            {
-                selectEditEmailModalVisible && 
+            {selectEditEmailModalVisible &&
                 <CustomModal
                     open={selectEditEmailModalVisible}
                     onClose={setEditEmailModalVisible}
@@ -180,8 +177,8 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     <View style={styles.modalView}>
                         <View style={styles.inputItem}>
                             <Text>Email</Text>
-                            <TextInput 
-                                placeholder="Email" 
+                            <TextInput
+                                placeholder="Email"
                                 value={email}
                                 onChangeText={setEmail}
                                 style={styles.textInput}
@@ -198,8 +195,7 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     </View>
                 </CustomModal>
             }
-            {
-                selectEditAddressModalVisible && 
+            {selectEditAddressModalVisible &&
                 <CustomModal
                     open={selectEditAddressModalVisible}
                     onClose={setEditAddressModalVisible}
@@ -208,27 +204,28 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     <View style={styles.modalView}>
                         <View style={styles.inputItem}>
                             <GooglePlacesAutocomplete
-                                placeholder="Type a place"
+                                placeholder="Address"
                                 onPress={(data) => {
                                     setAddress(data.description);
                                 }}
                                 query={{
-                                    key: "",
+                                    key: MAP_AP_KEY,
+                                    types: '(cities)'
                                 }}
                                 disableScroll={true}
-                                fetchDetails={true}
                                 styles={{
                                     textInputContainer: {
-                                      width: '100%',
-                                      borderWidth: 1,
-                                      borderRadius: 5
+                                        width: '100%',
+                                        borderWidth: 1,
+                                        borderRadius: 5
                                     },
                                     description: {
-                                      fontWeight: 'bold'
+                                        fontWeight: 'bold'
                                     },
                                     predefinedPlacesDescription: {
-                                      color: '#1faadb'
-                                    }}}
+                                        color: '#1faadb'
+                                    }
+                                }}
                             />
                         </View>
                         <View style={styles.inputItem}>
@@ -242,10 +239,9 @@ const Profile: React.FC<Props> = ({ navigation }) => {
                     </View>
                 </CustomModal>
             }
-
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     page: {
@@ -259,7 +255,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         width: "100%",
         gap: 8,
-        
     },
     item: {
         flexDirection: "row",
@@ -276,9 +271,9 @@ const styles = StyleSheet.create({
         gap: 4
     },
     profileImage: {
-      width: 100,
-      height: 100,
-      borderRadius: 50, // For circular images, half of the width and height
+        width: 100,
+        height: 100,
+        borderRadius: 50,
     },
     textLink: {
         color: "#9F520B"
@@ -288,17 +283,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 20
     },
-    // textInput: {
-    //     width: "100%"
-    // },
-    textInput:{
+    textInput: {
         width: "100%",
         borderWidth: 1,
         padding: 10,
-        borderRadius:5,
+        borderRadius: 5,
         borderColor: "#AFADAD",
-        backgroundColor:'white',
-        color:'#000000',
+        backgroundColor: 'white',
+        color: '#000000',
     },
     button: {
         borderRadius: 20,
@@ -306,6 +298,6 @@ const styles = StyleSheet.create({
         elevation: 2,
         width: "100%"
     },
-})
+});
 
-export default Profile
+export default ProfilePage;

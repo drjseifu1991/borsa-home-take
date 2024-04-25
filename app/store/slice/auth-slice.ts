@@ -1,10 +1,10 @@
+// Import necessary dependencies
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
 import type { RootState } from "../app-store";
-import { LoginRequest } from "../../model/login-request";
 import { Session } from "../../model/session";
 
+// Define the initial state interface
 interface AuthState {
   session: Session;
   isLoading: boolean;
@@ -24,6 +24,7 @@ const initialState: AuthState = {
   editAddressModalVisibile: false
 };
 
+// Create authSlice using createSlice
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -52,8 +53,15 @@ export const authSlice = createSlice({
   },
 });
 
+// Define selector to retrieve data from state
+export const selectSession = (state: RootState):Session => state.auth.session;
+export const selectIsLoading = (state: RootState):boolean => state.auth.isLoading;
+export const selectEditNameModalVisibile = (state: RootState):boolean => state.auth.editNameModalVisibile;
+export const selectEditUserNameModalVisibile = (state: RootState):boolean => state.auth.editUserNameModalVisibile;
+export const selectEditEmailModalVisibile = (state: RootState):boolean => state.auth.editEmailModalVisibile;
+export const selectEditAddressModalVisibile = (state: RootState):boolean => state.auth.editAddressModalVisibile;
 
-
+// Extract action creators and reducer from AuthSlice
 export const { 
   setSession, 
   logOut,
@@ -63,13 +71,5 @@ export const {
   setEditEmailModalVisible, 
   setEditAddressModalVisible 
 } = authSlice.actions;
-
-// Other code such as selectors can use the imported `RootState` type
-export const selectSession = (state: RootState):Session => state.auth.session;
-export const selectIsLoading = (state: RootState):boolean => state.auth.isLoading;
-export const selectEditNameModalVisibile = (state: RootState):boolean => state.auth.editNameModalVisibile;
-export const selectEditUserNameModalVisibile = (state: RootState):boolean => state.auth.editUserNameModalVisibile;
-export const selectEditEmailModalVisibile = (state: RootState):boolean => state.auth.editEmailModalVisibile;
-export const selectEditAddressModalVisibile = (state: RootState):boolean => state.auth.editAddressModalVisibile;
 
 export const authReducer = authSlice.reducer;

@@ -1,5 +1,14 @@
-import { useAppDispatch, useAppSelector } from "./app-store-hook";
-import { Session, LoginRequest, UserEditModel, UserRegistrationModel } from "../../model";
+// Import necessary dependencies
+import { 
+  useAppDispatch, 
+  useAppSelector 
+} from "./app-store-hook";
+import { 
+  Session, 
+  LoginRequest, 
+  UserEditModel, 
+  UserRegistrationModel 
+} from "../../model";
 import { 
   logOut,
   selectIsLoading, 
@@ -15,6 +24,7 @@ import {
 } from "../slice";
 import { sagaActions } from "../saga/saga-actions";
 
+// Define the custom hook `useAuth`
 export const useAuth = (): {
   session: Session;
   submitLoginRequest: (request: LoginRequest) => void;
@@ -31,45 +41,46 @@ export const useAuth = (): {
   selectEditEmailModalVisible: boolean;
   selectEditAddressModalVisible: boolean;
 } => {
+  // Access Redux store state and dispatch
   const session = useAppSelector(selectSession);
   const isLoading = useAppSelector(selectIsLoading);
-  const isEditNameModalVisibile = useAppSelector(selectEditNameModalVisibile)
-  const isEditUserNameModalVisibile = useAppSelector(selectEditUserNameModalVisibile)
-  const isEditEmailModalVisibile = useAppSelector(selectEditEmailModalVisibile)
-  const isEditAddressModalVisibile = useAppSelector(selectEditAddressModalVisibile)
-
+  const isEditNameModalVisible = useAppSelector(selectEditNameModalVisibile);
+  const isEditUserNameModalVisible = useAppSelector(selectEditUserNameModalVisibile);
+  const isEditEmailModalVisible = useAppSelector(selectEditEmailModalVisibile);
+  const isEditAddressModalVisible = useAppSelector(selectEditAddressModalVisibile);
   const dispatch = useAppDispatch();
 
+  // Return functions and state to be used by components
   return {
     session,
     submitLoginRequest: (request: LoginRequest) => {
-      dispatch({ type: sagaActions.LOGIN_REQUEST, payload: {...request}})
+      dispatch({ type: sagaActions.LOGIN_REQUEST, payload: { ...request }});
     },
     editProfile: (editedInfo: UserEditModel) => {
-      dispatch({type: sagaActions.EDIT_PROFILE, payload: {...editedInfo}})
+      dispatch({ type: sagaActions.EDIT_PROFILE, payload: { ...editedInfo }});
     },
     registerUser: (userInfo: UserRegistrationModel) => {
-      dispatch({type: sagaActions.REGISTER_USER, payload: {...userInfo}})
+      dispatch({ type: sagaActions.REGISTER_USER, payload: { ...userInfo }});
     },
     logOut: () => {
       dispatch(logOut());
     },
     setEditNameModalVisible: (value: boolean) => {
-      dispatch(setEditNameModalVisible(value))
+      dispatch(setEditNameModalVisible(value));
     },
     setEditUserNameModalVisible: (value: boolean) => {
-      dispatch(setEditUserNameModalVisible(value))
+      dispatch(setEditUserNameModalVisible(value));
     },
     setEditEmailModalVisible: (value: boolean) => {
-      dispatch(setEditEmailModalVisible(value))
+      dispatch(setEditEmailModalVisible(value));
     },
     setEditAddressModalVisible: (value: boolean) => {
-      dispatch(setEditAddressModalVisible(value))
+      dispatch(setEditAddressModalVisible(value));
     },
     selectIsLoading: isLoading,
-    selectEditNameModalVisible: isEditNameModalVisibile,
-    selectEditUserNameModalVisible: isEditUserNameModalVisibile,
-    selectEditEmailModalVisible: isEditEmailModalVisibile,
-    selectEditAddressModalVisible: isEditAddressModalVisibile,
+    selectEditNameModalVisible: isEditNameModalVisible,
+    selectEditUserNameModalVisible: isEditUserNameModalVisible,
+    selectEditEmailModalVisible: isEditEmailModalVisible,
+    selectEditAddressModalVisible: isEditAddressModalVisible,
   };
 };
